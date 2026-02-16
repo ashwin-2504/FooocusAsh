@@ -767,6 +767,26 @@ with shared.gradio_root:
                                                               'negative value will make white area smaller. '
                                                               '(default is 0, processed before SAM)')
 
+                        inpaint_advanced_masking_checkbox = gr.Checkbox(label='Enable Advanced Masking Features', value=False)
+                        invert_mask_checkbox = gr.Checkbox(label='Invert Mask', value=False)
+
+                        with gr.Column(visible=False) as inpaint_mask_generation_col:
+                            inpaint_mask_dino_prompt_text = gr.Textbox(label='GroundingDINO Prompt', show_label=True, placeholder="Type prompt here to generate mask automatically with GroundingDINO.")
+                            
+                            with gr.Row():
+                                inpaint_mask_box_threshold = gr.Slider(label='GroundingDINO Box Threshold', minimum=0.0, maximum=1.0, step=0.001, value=0.3)
+                                inpaint_mask_text_threshold = gr.Slider(label='GroundingDINO Text Threshold', minimum=0.0, maximum=1.0, step=0.001, value=0.25)
+
+                            with gr.Row():
+                                inpaint_mask_sam_model = gr.Dropdown(label='SAM Model', choices=['sam_vit_b_01ec64.pth', 'sam_vit_h_4b8939.pth', 'sam_vit_l_0b3195.pth'], value='sam_vit_b_01ec64.pth')
+                                inpaint_mask_model = gr.Dropdown(label='GroundingDINO Model', choices=['groundingdino_swint_ogc.pth', 'groundingdino_swinb_cogcoor.pth'], value='groundingdino_swint_ogc.pth')
+                                
+                            with gr.Row():
+                                inpaint_mask_cloth_category = gr.Dropdown(label='Cloth Category (for Cloth Segmentation)', choices=['upper_body', 'lower_body', 'dresses'], value='upper_body')
+                                inpaint_mask_sam_max_detections = gr.Slider(label='SAM Max Detections', minimum=1, maximum=100, step=1, value=1)
+                            
+                            generate_mask_button = gr.Button(value='Generate Mask', variant='primary')
+
                         inpaint_mask_color = gr.ColorPicker(label='Inpaint brush color', value='#FFFFFF', elem_id='inpaint_brush_color')
 
                         inpaint_ctrls = [debugging_inpaint_preprocessor, inpaint_disable_initial_latent, inpaint_engine,
