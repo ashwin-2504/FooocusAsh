@@ -1,6 +1,6 @@
 import threading
 
-from extras.inpaint_mask import generate_mask_from_image, SAMOptions
+from extras.inpaint_mask import generate_mask_from_image
 from modules.patch import PatchSettings, patch_settings, patch_all
 import modules.config
 
@@ -187,10 +187,10 @@ def worker():
     import modules.inpaint_worker as inpaint_worker
     import modules.constants as constants
     import extras.ip_adapter as ip_adapter
-    import extras.face_crop
+
     import fooocus_version
 
-    from extras.censor import default_censor
+
     from modules.sdxl_styles import apply_style, get_random_style, fooocus_expansion, apply_arrays, random_style_name
     from modules.private_logger import log
     from extras.expansion import safe_str
@@ -221,9 +221,7 @@ def worker():
         if not isinstance(imgs, list):
             imgs = [imgs]
 
-        if censor and (modules.config.default_black_out_nsfw or black_out_nsfw):
-            progressbar(async_task, progressbar_index, 'Checking for NSFW content ...')
-            imgs = default_censor(imgs)
+
 
         async_task.results = async_task.results + imgs
 
@@ -314,9 +312,7 @@ def worker():
         if inpaint_worker.current_task is not None:
             imgs = [inpaint_worker.current_task.post_process(x) for x in imgs]
         current_progress = int(base_progress + (100 - preparation_steps) / float(all_steps) * steps)
-        if modules.config.default_black_out_nsfw or async_task.black_out_nsfw:
-            progressbar(async_task, current_progress, 'Checking for NSFW content ...')
-            imgs = default_censor(imgs)
+
         progressbar(async_task, current_progress, f'Saving image {current_task_id + 1}/{total_count} to system ...')
         img_paths = save_and_log(async_task, height, imgs, task, use_expansion, width, loras, persist_image)
         yield_result(async_task, img_paths, current_progress, async_task.black_out_nsfw, False,
@@ -427,19 +423,7 @@ def worker():
             task[0] = ip_adapter.preprocess(cn_img, ip_adapter_path=ip_adapter_path)
             if async_task.debugging_cn_preprocessor:
                 yield_result(async_task, cn_img, current_progress, async_task.black_out_nsfw, do_not_show_finished_images=True)
-        for task in async_task.cn_tasks[flags.cn_ip_face]:
-            cn_img, cn_stop, cn_weight = task
-            cn_img = HWC3(cn_img)
 
-            if not async_task.skipping_cn_preprocessor:
-                cn_img = extras.face_crop.crop_image(cn_img)
-
-            # https://github.com/tencent-ailab/IP-Adapter/blob/d580c50a291566bbf9fc7ac0f760506607297e6d/README.md?plain=1#L75
-            cn_img = resize_image(cn_img, width=224, height=224, resize_mode=0)
-
-            task[0] = ip_adapter.preprocess(cn_img, ip_adapter_path=ip_adapter_face_path)
-            if async_task.debugging_cn_preprocessor:
-                yield_result(async_task, cn_img, current_progress, async_task.black_out_nsfw, do_not_show_finished_images=True)
         all_ip_tasks = async_task.cn_tasks[flags.cn_ip] + async_task.cn_tasks[flags.cn_ip_face]
         if len(all_ip_tasks) > 0:
             pipeline.final_unet = ip_adapter.patch_model(pipeline.final_unet, all_ip_tasks)
