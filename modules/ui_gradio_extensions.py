@@ -26,7 +26,7 @@ def javascript_html():
     script_js_path = webpath('javascript/script.js')
     context_menus_js_path = webpath('javascript/contextMenus.js')
     localization_js_path = webpath('javascript/localization.js')
-    zoom_js_path = webpath('javascript/zoom.js')
+    # zoom_js_path = webpath('javascript/zoom.js')
     edit_attention_js_path = webpath('javascript/edit-attention.js')
     viewer_js_path = webpath('javascript/viewer.js')
     image_viewer_js_path = webpath('javascript/imageviewer.js')
