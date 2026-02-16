@@ -169,6 +169,7 @@ def worker():
     global async_tasks
 
     import os
+    import uuid
     import traceback
     import math
     import numpy as np
@@ -221,7 +222,22 @@ def worker():
         if not isinstance(imgs, list):
             imgs = [imgs]
 
-
+        tmp_dir = os.path.join("outputs", "tmp")
+        os.makedirs(tmp_dir, exist_ok=True)
+        
+        saved_paths = []
+        for img in imgs:
+            filename = f"{uuid.uuid4()}.png"
+            filepath = os.path.join(tmp_dir, filename)
+            
+            if isinstance(img, np.ndarray):
+                from PIL import Image
+                img = Image.fromarray(img)
+                
+            img.save(filepath)
+            saved_paths.append(filepath)
+            
+        imgs = saved_paths
 
         async_task.results = async_task.results + imgs
 

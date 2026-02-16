@@ -35,7 +35,7 @@ def javascript_html():
     head += f'<script type="text/javascript" src="{script_js_path}"></script>\n'
     head += f'<script type="text/javascript" src="{context_menus_js_path}"></script>\n'
     head += f'<script type="text/javascript" src="{localization_js_path}"></script>\n'
-    head += f'<script type="text/javascript" src="{zoom_js_path}"></script>\n'
+    # head += f'<script type="text/javascript" src="{zoom_js_path}"></script>\n'
     head += f'<script type="text/javascript" src="{edit_attention_js_path}"></script>\n'
     head += f'<script type="text/javascript" src="{viewer_js_path}"></script>\n'
     head += f'<script type="text/javascript" src="{image_viewer_js_path}"></script>\n'

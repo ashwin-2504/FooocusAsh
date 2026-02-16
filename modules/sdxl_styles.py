@@ -25,6 +25,29 @@ def normalize_key(k):
 styles = {}
 styles_files = get_files_from_folder(styles_path, ['.json'])
 
+# Lean Engine - Hard Style Filter
+style_whitelist = [
+    "Fooocus Enhance",
+    "Fooocus Sharp",
+    "Fooocus Photograph",
+    "Fooocus Cinematic",
+    "Fooocus Masterpiece",
+    "Fooocus Body Poses",
+    "SAI Photographic",
+    "SAI Cinematic",
+    "SAI Analog Film",
+    "SAI Enhance",
+    "SAI Texture",
+    "Cinematic Diva",
+    "Photo Film Noir",
+    "Photo HDR",
+    "Photo Long Exposure",
+    "Photo Neon Noir",
+    "Photo Iphone Photographic",
+    "Photo Silhouette",
+    "Ads Fashion Editorial"
+]
+
 for x in ['sdxl_styles_fooocus.json',
           'sdxl_styles_sai.json',
           'sdxl_styles_mre.json',
@@ -40,6 +63,9 @@ for styles_file in styles_files:
         with open(os.path.join(styles_path, styles_file), encoding='utf-8') as f:
             for entry in json.load(f):
                 name = normalize_key(entry['name'])
+                if name not in style_whitelist:
+                    continue
+                
                 prompt = entry['prompt'] if 'prompt' in entry else ''
                 negative_prompt = entry['negative_prompt'] if 'negative_prompt' in entry else ''
                 styles[name] = (prompt, negative_prompt)

@@ -30,6 +30,18 @@ def get_task(*args):
 
     return worker.AsyncTask(args=args)
 
+def clear_temp_on_startup():
+    tmp_dir = os.path.join("outputs", "tmp")
+    if os.path.exists(tmp_dir):
+        try:
+            for filename in os.listdir(tmp_dir):
+                file_path = os.path.join(tmp_dir, filename)
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+            print(f"[Fooocus] Cleared temporary directory: {tmp_dir}")
+        except Exception as e:
+            print(f"[Fooocus] Failed to delete temp files: {e}")
+
 def generate_clicked(task: worker.AsyncTask):
     import ldm_patched.modules.model_management as model_management
 
@@ -50,8 +62,9 @@ def generate_clicked(task: worker.AsyncTask):
 
     worker.async_tasks.append(task)
 
+    last_yield_time = 0
     while not finished:
-        time.sleep(0.01)
+        time.sleep(0.02)
         if len(task.yields) > 0:
             flag, product = task.yields.pop(0)
             if flag == 'preview':
@@ -62,9 +75,16 @@ def generate_clicked(task: worker.AsyncTask):
                         # print('Skipped one preview for better internet connection.')
                         continue
 
+                # Adaptive Gating: Max 10Hz
+                current_time = time.perf_counter()
+                if current_time - last_yield_time < 0.1:
+                    continue
+
+                last_yield_time = current_time
+
                 percentage, title, image = product
                 yield gr.update(visible=True, value=modules.html.make_progress_html(percentage, title)), \
-                    gr.update(visible=True, value=image) if image is not None else gr.update(), \
+                    gr.update(visible=False, value=None), \
                     gr.update(), \
                     gr.update(visible=False)
             if flag == 'results':
@@ -83,10 +103,11 @@ def generate_clicked(task: worker.AsyncTask):
                 finished = True
 
                 # delete Fooocus temp images, only keep gradio temp images
-                if args_manager.args.disable_image_log:
-                    for filepath in product:
-                        if isinstance(filepath, str) and os.path.exists(filepath):
-                            os.remove(filepath)
+                # delete Fooocus temp images, only keep gradio temp images
+                # if args_manager.args.disable_image_log:
+                #     for filepath in product:
+                #         if isinstance(filepath, str) and os.path.exists(filepath):
+                #             os.remove(filepath)
 
     execution_time = time.perf_counter() - execution_start_time
     print(f'Total time: {execution_time:.2f} seconds')
@@ -1023,6 +1044,7 @@ def dump_default_english_config():
 
 
 # dump_default_english_config()
+clear_temp_on_startup()
 
 shared.gradio_root.launch(
     inbrowser=args_manager.args.in_browser,
