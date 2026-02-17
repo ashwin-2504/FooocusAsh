@@ -84,10 +84,6 @@ if args.hf_mirror is not None:
     os.environ['HF_MIRROR'] = str(args.hf_mirror)
     print("Set hf_mirror to:", args.hf_mirror)
 
-if args.civitai_token is not None:
-    os.environ['CIVITAI_TOKEN'] = str(args.civitai_token)
-    print("Set Civitai Token.")
-
 from modules import config
 from modules.hash_cache import init_cache
 

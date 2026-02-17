@@ -25,7 +25,7 @@
   "embeddings_downloads": {},
   "lora_downloads": {
     "SDXL_FILM_PHOTOGRAPHY_STYLE_V1.safetensors": "https://huggingface.co/mashb1t/fav_models/resolve/main/fav/SDXL_FILM_PHOTOGRAPHY_STYLE_V1.safetensors",
-    "Realism SDXL.safetensors": "https://civitai.com/api/download/models/871405"
+    "Realism SDXL.safetensors": "https://huggingface.co/VeritableScar16/Realism/resolve/main/Realism%20SDXL.safetensors"
   },
   "previous_default_models": ["realisticStockPhoto_v10.safetensors"]
 }

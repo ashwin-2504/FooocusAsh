@@ -40,9 +40,6 @@ args_parser.parser.add_argument("--always-download-new-model", action='store_tru
 args_parser.parser.add_argument("--rebuild-hash-cache", help="Generates missing model and LoRA hashes.",
                                 type=int, nargs="?", metavar="CPU_NUM_THREADS", const=-1)
 
-args_parser.parser.add_argument("--civitai-token", type=str, default=None,
-                                help="Civitai API Token for downloading authenticated models.")
-
 args_parser.parser.set_defaults(
     disable_cuda_malloc=True,
     in_browser=True,
