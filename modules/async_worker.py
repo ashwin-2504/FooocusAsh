@@ -227,6 +227,10 @@ def worker():
         
         saved_paths = []
         for img in imgs:
+            if isinstance(img, str):
+                saved_paths.append(img)
+                continue
+
             filename = f"{uuid.uuid4()}.png"
             filepath = os.path.join(tmp_dir, filename)
             
