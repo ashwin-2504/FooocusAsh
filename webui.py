@@ -403,7 +403,16 @@ with shared.gradio_root:
                                                                           value=modules.config.default_inpaint_mask_cloth_category,
                                                                           visible=modules.config.default_enhance_inpaint_mask_model == 'u2net_cloth_seg',
                                                                           interactive=True)
-
+                                
+                                enhance_mask_dino_prompt_text = gr.Textbox(label='GroundingDINO Prompt', show_label=True, placeholder="Type prompt here to generate mask automatically with GroundingDINO.")
+                                
+                                with gr.Row():
+                                    enhance_mask_box_threshold = gr.Slider(label='GroundingDINO Box Threshold', minimum=0.0, maximum=1.0, step=0.001, value=0.3)
+                                    enhance_mask_text_threshold = gr.Slider(label='GroundingDINO Text Threshold', minimum=0.0, maximum=1.0, step=0.001, value=0.25)
+                                    
+                                with gr.Row():
+                                    enhance_mask_sam_model = gr.Dropdown(label='SAM Model', choices=['sam_vit_b_01ec64.pth', 'sam_vit_h_4b8939.pth', 'sam_vit_l_0b3195.pth'], value='sam_vit_b_01ec64.pth')
+                                    enhance_mask_sam_max_detections = gr.Slider(label='SAM Max Detections', minimum=1, maximum=100, step=1, value=1)
 
 
                             with gr.Accordion("Inpaint", visible=True, open=False):
@@ -440,14 +449,22 @@ with shared.gradio_root:
                             gr.HTML('<a href="https://github.com/lllyasviel/Fooocus/discussions/3281" target="_blank">\U0001F4D4 Documentation</a>')
 
                         enhance_ctrls += [
-                            enhance_enabled,
-
-                            enhance_inpaint_disable_initial_latent,
-                            enhance_inpaint_engine,
-                            enhance_inpaint_strength,
-                            enhance_inpaint_respective_field,
+                            enhance_mask_invert,
                             enhance_inpaint_erode_or_dilate,
-                            enhance_mask_invert
+                            enhance_inpaint_respective_field,
+                            enhance_inpaint_strength,
+                            enhance_inpaint_engine,
+                            enhance_inpaint_disable_initial_latent,
+                            enhance_mask_sam_max_detections,
+                            enhance_mask_box_threshold,
+                            enhance_mask_text_threshold,
+                            enhance_mask_sam_model,
+                            enhance_mask_cloth_category,
+                            enhance_mask_model,
+                            enhance_negative_prompt,
+                            enhance_prompt,
+                            enhance_mask_dino_prompt_text,
+                            enhance_enabled
                         ]
 
                         enhance_inpaint_mode_ctrls += [enhance_inpaint_mode]
