@@ -25,9 +25,7 @@ from modules.auth import auth_enabled, check_auth
 from modules.util import is_json
 
 def get_task(*args):
-    args = list(args)
-    args.pop(0)
-
+    args = list(reversed(args))
     return worker.AsyncTask(args=args)
 
 def clear_temp_on_startup():
@@ -449,22 +447,22 @@ with shared.gradio_root:
                             gr.HTML('<a href="https://github.com/lllyasviel/Fooocus/discussions/3281" target="_blank">\U0001F4D4 Documentation</a>')
 
                         enhance_ctrls += [
-                            enhance_mask_invert,
-                            enhance_inpaint_erode_or_dilate,
-                            enhance_inpaint_respective_field,
-                            enhance_inpaint_strength,
-                            enhance_inpaint_engine,
-                            enhance_inpaint_disable_initial_latent,
-                            enhance_mask_sam_max_detections,
-                            enhance_mask_box_threshold,
-                            enhance_mask_text_threshold,
-                            enhance_mask_sam_model,
-                            enhance_mask_cloth_category,
-                            enhance_mask_model,
-                            enhance_negative_prompt,
-                            enhance_prompt,
+                            enhance_enabled,
                             enhance_mask_dino_prompt_text,
-                            enhance_enabled
+                            enhance_prompt,
+                            enhance_negative_prompt,
+                            enhance_mask_model,
+                            enhance_mask_cloth_category,
+                            enhance_mask_sam_model,
+                            enhance_mask_text_threshold,
+                            enhance_mask_box_threshold,
+                            enhance_mask_sam_max_detections,
+                            enhance_inpaint_disable_initial_latent,
+                            enhance_inpaint_engine,
+                            enhance_inpaint_strength,
+                            enhance_inpaint_respective_field,
+                            enhance_inpaint_erode_or_dilate,
+                            enhance_mask_invert
                         ]
 
                         enhance_inpaint_mode_ctrls += [enhance_inpaint_mode]
