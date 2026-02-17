@@ -3,7 +3,7 @@
   "default_refiner": "None",
   "default_refiner_switch": 0.5,
   "default_loras": [
-    [true, "Realism SDXL.safetensors", 0.6],
+    [true, "SDXL_FILM_PHOTOGRAPHY_STYLE_V1.safetensors", 0.6],
     [true, "None", 1.0],
     [true, "None", 1.0],
     [true, "None", 1.0],
@@ -16,7 +16,7 @@
   "default_performance": "Speed",
   "default_prompt": "",
   "default_prompt_negative": "unrealistic, saturated, high contrast, big nose, painting, drawing, sketch, cartoon, anime, manga, render, CG, 3d, watermark, signature, label",
-  "default_styles": ["Fooocus V2", "Fooocus Photograph", "Fooocus Negative"],
+  "default_styles": ["Fooocus V2", "Fooocus Enhance", "Fooocus Sharp"],
   "default_aspect_ratio": "896*1152",
   "default_overwrite_step": -1,
   "checkpoint_downloads": {
