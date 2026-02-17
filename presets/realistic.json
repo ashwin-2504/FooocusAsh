@@ -1,5 +1,5 @@
 {
-  "default_model": "realisticStockPhoto_v20.safetensors",
+  "default_model": "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
   "default_refiner": "None",
   "default_refiner_switch": 0.5,
   "default_loras": [
@@ -20,7 +20,7 @@
   "default_aspect_ratio": "896*1152",
   "default_overwrite_step": -1,
   "checkpoint_downloads": {
-    "realisticStockPhoto_v20.safetensors": "https://huggingface.co/lllyasviel/fav_models/resolve/main/fav/realisticStockPhoto_v20.safetensors"
+    "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors"
   },
   "embeddings_downloads": {},
   "lora_downloads": {

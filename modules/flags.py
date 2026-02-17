@@ -38,7 +38,7 @@ KSAMPLER = {
     "dpmpp_2m_sde": "DPM++ 2M SDE",
     "dpmpp_2m_sde_gpu": "DPM++ 2M SDE",
     "dpmpp_3m_sde": "",
-    "dpmpp_3m_sde_gpu": "",
+    "dpmpp_3m_sde_gpu": "DPM++ 3M SDE GPU",
     "ddpm": "",
     "lcm": "LCM",
     "tcd": "TCD",
