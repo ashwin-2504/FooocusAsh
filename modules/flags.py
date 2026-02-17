@@ -137,8 +137,8 @@ class PerformanceLoRA(Enum):
 
 
 class Steps(IntEnum):
-    QUALITY = 60
-    SPEED = 30
+    QUALITY = 50
+    SPEED = 25
     EXTREME_SPEED = 8
     LIGHTNING = 4
     HYPER_SD = 4
