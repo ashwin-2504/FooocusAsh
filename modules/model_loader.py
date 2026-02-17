@@ -16,6 +16,13 @@ def load_file_from_url(
     """
     domain = os.environ.get("HF_MIRROR", "https://huggingface.co").rstrip('/')
     url = str.replace(url, "https://huggingface.co", domain, 1)
+
+    if 'civitai.com' in url:
+        token = os.environ.get('CIVITAI_TOKEN')
+        if token:
+            separator = '&' if '?' in url else '?'
+            url = f"{url}{separator}token={token}"
+
     os.makedirs(model_dir, exist_ok=True)
     if not file_name:
         parts = urlparse(url)
