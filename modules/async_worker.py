@@ -25,7 +25,7 @@ class AsyncTask:
         if len(args) == 0:
             return
 
-        args.reverse()
+        args.pop() # currentTask
         self.generate_image_grid = args.pop()
         self.prompt = args.pop()
         self.negative_prompt = args.pop()

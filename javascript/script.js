@@ -105,23 +105,7 @@ function scheduleAfterUiUpdateCallbacks() {
 
 var executedOnLoaded = false;
 
-document.addEventListener("DOMContentLoaded", function () {
-  // var mutationObserver = new MutationObserver(function(m) {
-  //     if (!executedOnLoaded && gradioApp().querySelector('#generate_button')) {
-  //         executedOnLoaded = true;
-  //         executeCallbacks(uiLoadedCallbacks);
-  //     }
-  //     executeCallbacks(uiUpdateCallbacks, m);
-  //     scheduleAfterUiUpdateCallbacks();
-  //     const newTab = get_uiCurrentTab();
-  //     if (newTab && (newTab !== uiCurrentTab)) {
-  //         uiCurrentTab = newTab;
-  //         executeCallbacks(uiTabChangeCallbacks);
-  //     }
-  // });
-  // mutationObserver.observe(gradioApp(), {childList: true, subtree: true});
-  // initStylePreviewOverlay();
-});
+document.addEventListener("DOMContentLoaded", function () {});
 
 var onAppend = function (elem, f) {
   var observer = new MutationObserver(function (mutations) {
@@ -190,8 +174,6 @@ document.addEventListener("keydown", function (e) {
     }
   }
 });
-
-// initStylePreviewOverlay removed
 
 /**
  * checks that a UI element is not in another hidden element or tab content
