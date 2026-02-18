@@ -20,7 +20,9 @@
   "default_aspect_ratio": "1152*896",
   "default_overwrite_step": -1,
   "checkpoint_downloads": {
-    "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors"
+    "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
+    "realvisxlV50_v50LightningBakedvae.safetensors": "https://huggingface.co/VeritableScar16/realvisxlV50_v50LightningBakedvae.safetensors/resolve/main/realvisxlV50_v50LightningBakedvae.safetensors",
+    "zavychromaxl_v100.safetensors": "https://huggingface.co/VeritableScar16/zavychromaxl_v100.safetensors/resolve/main/zavychromaxl_v100.safetensors"
   },
   "embeddings_downloads": {},
   "lora_downloads": {
