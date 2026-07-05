@@ -318,7 +318,7 @@ with shared.gradio_root:
                                            outputs=ip_ad_cols + ip_types + ip_stops + ip_weights,
                                            queue=False, show_progress=False)
 
-                    with gr.Tab(label='Inpaint or Outpaint', id='inpaint_tab') as inpaint_tab:
+                    with gr.Tab(label='Inpaint or Outpaint', id='inpaint_tab', visible=False) as inpaint_tab:
                         with gr.Row():
                             with gr.Column():
                                 inpaint_input_image = grh.Image(label='Image', source='upload', type='numpy', tool='sketch', height=500, brush_color="#FFFFFF", elem_id='inpaint_canvas', show_label=False)
@@ -878,7 +878,7 @@ with shared.gradio_root:
                             canny_high_threshold = gr.Slider(label='Canny High Threshold', minimum=1, maximum=255,
                                                              step=1, value=128)
 
-                    with gr.Tab(label='Inpaint'):
+                    with gr.Tab(label='Inpaint', visible=False):
                         debugging_inpaint_preprocessor = gr.Checkbox(label='Debug Inpaint Preprocessing', value=False)
                         debugging_enhance_masks_checkbox = gr.Checkbox(label='Debug Enhance Masks', value=False,
                                                                        info='Show enhance masks in preview and final results')

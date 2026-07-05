@@ -1,6 +1,4 @@
 import gradio as gr
-import numpy as np
-from PIL import Image as PILImage
 
 all_components = []
 
@@ -16,10 +14,8 @@ gr.Block.__init__ = blk_ini
 
 
 class ImageWrapper:
-    """Wrapper to translate Gradio 3 Image arguments to Gradio 5 Image or ImageEditor."""
+    """Wrapper to translate Gradio 3 Image arguments to standard Gradio 5 Image."""
     def __new__(cls, *args, **kwargs):
-        is_editor = kwargs.get('tool') == 'sketch'
-        
         # Translate source to sources
         if 'source' in kwargs:
             src = kwargs.pop('source')
@@ -30,7 +26,7 @@ class ImageWrapper:
             else:
                 kwargs['sources'] = [src]
                 
-        # Clean up parameters not supported by Gradio 5 Image or ImageEditor
+        # Clean up parameters not supported by Gradio 5 Image
         kwargs.pop('tool', None)
         kwargs.pop('brush_color', None)
         kwargs.pop('mask_opacity', None)
@@ -40,12 +36,7 @@ class ImageWrapper:
         kwargs.pop('show_share_button', None)
         kwargs.pop('streaming', None)
         
-        if is_editor:
-            # gr.ImageEditor in Gradio 5
-            return gr.ImageEditor(*args, **kwargs)
-        else:
-            # gr.Image in Gradio 5
-            return gr.Image(*args, **kwargs)
+        return gr.Image(*args, **kwargs)
 
 # Expose as Image to match modules.gradio_hijack.Image
 Image = ImageWrapper
