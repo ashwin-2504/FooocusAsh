@@ -9,25 +9,27 @@ script_path = os.path.dirname(modules_path)
 
 
 def webpath(fn):
-    if fn.startswith(script_path):
-        web_path = os.path.relpath(fn, script_path).replace('\\', '/')
-    else:
-        web_path = os.path.abspath(fn)
-
-    # In Gradio 5, we mount static files or reference relative paths.
-    # We will use /file= prefix which is standard for local file serving.
-    return f'file/{web_path}' if not web_path.startswith('file/') else web_path
+    # Resolve the absolute path of the resource
+    abs_path = os.path.abspath(os.path.join(script_path, fn) if not os.path.isabs(fn) else fn)
+    # Convert backslashes to forward slashes for URLs
+    abs_path = abs_path.replace('\\', '/')
+    # Cache busting query parameter using modification time
+    try:
+        mtime = int(os.path.getmtime(abs_path))
+    except Exception:
+        mtime = 0
+    return f'/file={abs_path}?{mtime}'
 
 
 def javascript_html():
-    script_js_path = "/file=javascript/script.js"
-    context_menus_js_path = "/file=javascript/contextMenus.js"
-    localization_js_path = "/file=javascript/localization.js"
-    zoom_js_path = "/file=javascript/zoom.js"
-    edit_attention_js_path = "/file=javascript/edit-attention.js"
-    viewer_js_path = "/file=javascript/viewer.js"
-    image_viewer_js_path = "/file=javascript/imageviewer.js"
-    samples_path = "/file=sdxl_styles/samples/fooocus_v2.jpg"
+    script_js_path = webpath("javascript/script.js")
+    context_menus_js_path = webpath("javascript/contextMenus.js")
+    localization_js_path = webpath("javascript/localization.js")
+    zoom_js_path = webpath("javascript/zoom.js")
+    edit_attention_js_path = webpath("javascript/edit-attention.js")
+    viewer_js_path = webpath("javascript/viewer.js")
+    image_viewer_js_path = webpath("javascript/imageviewer.js")
+    samples_path = webpath("sdxl_styles/samples/fooocus_v2.jpg")
 
     head = f'<script type="text/javascript">{localization_js(args_manager.args.language)}</script>\n'
     head += f'<script type="text/javascript" src="{script_js_path}"></script>\n'
@@ -46,7 +48,7 @@ def javascript_html():
 
 
 def css_html():
-    style_css_path = "/file=css/style.css"
+    style_css_path = webpath("css/style.css")
     head = f'<link rel="stylesheet" property="stylesheet" href="{style_css_path}">'
     return head
 
