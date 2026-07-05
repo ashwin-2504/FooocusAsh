@@ -1,6 +1,39 @@
 import os
 import sys
 import subprocess
+import builtins
+from datetime import datetime
+
+_original_print = builtins.print
+_at_line_start = True
+
+def print_with_timestamp(*args, **kwargs):
+    global _at_line_start
+    ts = datetime.now().strftime("[%Y-%m-%d %H:%M:%S.%f]")[:-3]
+    end = kwargs.get('end', '\n')
+    
+    if args:
+        msg = " ".join(map(str, args))
+        if _at_line_start:
+            formatted_msg = f"{ts} {msg}"
+        else:
+            formatted_msg = msg
+        if end.endswith('\n'):
+            _at_line_start = True
+        else:
+            _at_line_start = False
+        _original_print(formatted_msg, **kwargs)
+    else:
+        if _at_line_start:
+            _original_print(f"{ts}", **kwargs)
+        else:
+            _original_print("", **kwargs)
+        if end.endswith('\n'):
+            _at_line_start = True
+        else:
+            _at_line_start = False
+
+builtins.print = print_with_timestamp
 
 # Programmatically remove cupy on Google Colab to avoid the NumPy C-API incompatibility crash
 if os.path.exists('/content'):

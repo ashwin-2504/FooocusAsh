@@ -4,7 +4,6 @@ import importlib.util
 import shutil
 import subprocess
 import sys
-import re
 import logging
 import importlib.metadata
 import packaging.version
@@ -12,8 +11,6 @@ from packaging.requirements import Requirement
 
 logging.getLogger("torch.distributed.nn").setLevel(logging.ERROR)  # sshh...
 logging.getLogger("xformers").addFilter(lambda record: 'A matching Triton is not available' not in record.getMessage())
-
-re_requirement = re.compile(r"\s*([-\w]+)\s*(?:==\s*([-+.\w]+))?\s*")
 
 python = sys.executable
 default_command_live = (os.environ.get('LAUNCH_LIVE_OUTPUT') == "1")
