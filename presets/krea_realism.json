@@ -35,7 +35,7 @@
     "default_scheduler": "karras",
     "default_performance": "Speed",
     "default_prompt": "",
-    "default_prompt_negative": "unrealistic, saturated, high contrast, big nose, painting, drawing, sketch, cartoon, anime, manga, render, CG, 3d, watermark, signature, label",
+    "default_prompt_negative": "unrealistic, saturated, high contrast, painting, drawing, sketch, cartoon, anime, manga, render, CG, 3d, watermark, signature, label",
     "default_styles": [
         "Fooocus V2",
         "Fooocus Photograph",
@@ -43,6 +43,7 @@
     ],
     "default_aspect_ratio": "896*1152",
     "default_overwrite_step": -1,
+    "default_black_out_nsfw": false,
     "checkpoint_downloads": {
         "RealVisXL_V4.0.safetensors": "https://huggingface.co/SG161222/RealVisXL_V4.0/resolve/main/RealVisXL_V4.0.safetensors"
     },
@@ -51,9 +52,5 @@
         "SDXL_FILM_PHOTOGRAPHY_STYLE_V1.safetensors": "https://huggingface.co/mashb1t/fav_models/resolve/main/fav/SDXL_FILM_PHOTOGRAPHY_STYLE_V1.safetensors",
         "add_detail_xl.safetensors": "https://huggingface.co/rebelscum/lora/resolve/main/add_detail_xl.safetensors",
         "sdxl_lowra.safetensors": "https://huggingface.co/JCTN/lora/resolve/main/lora/LowRA.safetensors"
-    },
-    "previous_default_models": [
-        "realisticStockPhoto_v20.safetensors",
-        "realisticStockPhoto_v10.safetensors"
-    ]
+    }
 }
