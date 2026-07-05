@@ -1,36 +1,36 @@
-# based on https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/v1.6.0/modules/ui_gradio_extensions.py
-
 import os
 import gradio as gr
 import args_manager
 
 from modules.localization import localization_js
 
-
-GradioTemplateResponseOriginal = gr.routes.templates.TemplateResponse
-
 modules_path = os.path.dirname(os.path.realpath(__file__))
 script_path = os.path.dirname(modules_path)
 
 
 def webpath(fn):
-    if fn.startswith(script_path):
-        web_path = os.path.relpath(fn, script_path).replace('\\', '/')
-    else:
-        web_path = os.path.abspath(fn)
-
-    return f'file={web_path}?{os.path.getmtime(fn)}'
+    # Resolve the absolute path of the resource
+    abs_path = os.path.abspath(os.path.join(script_path, fn) if not os.path.isabs(fn) else fn)
+    # Convert backslashes to forward slashes for URLs
+    abs_path = abs_path.replace('\\', '/')
+    # Cache busting query parameter using modification time
+    try:
+        mtime = int(os.path.getmtime(abs_path))
+    except Exception:
+        mtime = 0
+    return f'/file={abs_path}?{mtime}'
 
 
 def javascript_html():
-    script_js_path = webpath('javascript/script.js')
-    context_menus_js_path = webpath('javascript/contextMenus.js')
-    localization_js_path = webpath('javascript/localization.js')
-    zoom_js_path = webpath('javascript/zoom.js')
-    edit_attention_js_path = webpath('javascript/edit-attention.js')
-    viewer_js_path = webpath('javascript/viewer.js')
-    image_viewer_js_path = webpath('javascript/imageviewer.js')
-    samples_path = webpath(os.path.abspath('./sdxl_styles/samples/fooocus_v2.jpg'))
+    script_js_path = webpath("javascript/script.js")
+    context_menus_js_path = webpath("javascript/contextMenus.js")
+    localization_js_path = webpath("javascript/localization.js")
+    zoom_js_path = webpath("javascript/zoom.js")
+    edit_attention_js_path = webpath("javascript/edit-attention.js")
+    viewer_js_path = webpath("javascript/viewer.js")
+    image_viewer_js_path = webpath("javascript/imageviewer.js")
+    samples_path = webpath("sdxl_styles/samples/fooocus_v2.jpg")
+
     head = f'<script type="text/javascript">{localization_js(args_manager.args.language)}</script>\n'
     head += f'<script type="text/javascript" src="{script_js_path}"></script>\n'
     head += f'<script type="text/javascript" src="{context_menus_js_path}"></script>\n'
@@ -48,20 +48,15 @@ def javascript_html():
 
 
 def css_html():
-    style_css_path = webpath('css/style.css')
+    style_css_path = webpath("css/style.css")
     head = f'<link rel="stylesheet" property="stylesheet" href="{style_css_path}">'
     return head
 
 
+def get_head_html():
+    return javascript_html() + css_html()
+
+
 def reload_javascript():
-    js = javascript_html()
-    css = css_html()
-
-    def template_response(*args, **kwargs):
-        res = GradioTemplateResponseOriginal(*args, **kwargs)
-        res.body = res.body.replace(b'</head>', f'{js}</head>'.encode("utf8"))
-        res.body = res.body.replace(b'</body>', f'{css}</body>'.encode("utf8"))
-        res.init_headers()
-        return res
-
-    gr.routes.templates.TemplateResponse = template_response
+    # Deprecated in Gradio 5 as we pass head directly to gr.Blocks(head=...)
+    pass

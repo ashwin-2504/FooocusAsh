@@ -10,17 +10,17 @@ import modules.html
 import modules.async_worker as worker
 import modules.constants as constants
 import modules.flags as flags
-import modules.gradio_hijack_v5 as grh
+import modules.gradio_hijack as grh
 import modules.style_sorter as style_sorter
 import modules.meta_parser
 import args_manager
 import copy
-import launch_v5 as launch
+import launch
 from extras.inpaint_mask import SAMOptions
 
 from modules.sdxl_styles import legal_style_names
 from modules.private_logger import get_current_html_path
-from modules.ui_gradio_extensions_v5 import get_head_html
+from modules.ui_gradio_extensions import get_head_html
 from modules.auth import auth_enabled, check_auth
 from modules.util import is_json
 
