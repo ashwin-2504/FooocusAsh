@@ -1,16 +1,17 @@
 import gradio as gr
+from gradio.blocks import Block
 
 all_components = []
 
 # Guard Block init to track all components (used by dump_default_english_config)
-if not hasattr(gr.Block, 'original_init'):
-    gr.Block.original_init = gr.Block.__init__
+if not hasattr(Block, 'original_init'):
+    Block.original_init = Block.__init__
 
 def blk_ini(self, *args, **kwargs):
     all_components.append(self)
-    return gr.Block.original_init(self, *args, **kwargs)
+    return Block.original_init(self, *args, **kwargs)
 
-gr.Block.__init__ = blk_ini
+Block.__init__ = blk_ini
 
 
 class ImageWrapper:
