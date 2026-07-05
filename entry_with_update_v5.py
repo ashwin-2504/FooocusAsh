@@ -1,6 +1,19 @@
 import os
 import sys
+import subprocess
 
+# Programmatically remove cupy on Google Colab to avoid the NumPy C-API incompatibility crash
+if os.path.exists('/content'):
+    print("Google Colab detected. Programmatically uninstalling conflicting cupy package...")
+    try:
+        subprocess.run(
+            [sys.executable, "-m", "pip", "uninstall", "-y", "cupy-cuda12x", "cupy-cuda11x", "cupy-cuda13x", "cupy"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        print("Conflicting cupy package uninstalled successfully.")
+    except Exception as e:
+        print(f"Failed to uninstall cupy: {e}")
 
 root = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(root)
