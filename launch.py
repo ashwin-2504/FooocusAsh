@@ -28,8 +28,13 @@ TRY_INSTALL_XFORMERS = False
 
 def prepare_environment():
     torch_index_url = os.environ.get('TORCH_INDEX_URL', "https://download.pytorch.org/whl/cu121")
-    torch_command = os.environ.get('TORCH_COMMAND',
-                                   f"pip install torch==2.1.0 torchvision==0.16.0 --extra-index-url {torch_index_url}")
+    python_version = platform.python_version_tuple()
+    if int(python_version[0]) == 3 and int(python_version[1]) == 10:
+        torch_command = os.environ.get('TORCH_COMMAND',
+                                       f"pip install torch==2.1.0 torchvision==0.16.0 --extra-index-url {torch_index_url}")
+    else:
+        torch_command = os.environ.get('TORCH_COMMAND',
+                                       f"pip install torch torchvision --extra-index-url {torch_index_url}")
     requirements_file = os.environ.get('REQS_FILE', "requirements_versions.txt")
 
     print(f"Python {sys.version}")
