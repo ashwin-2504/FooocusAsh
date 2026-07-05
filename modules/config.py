@@ -768,7 +768,30 @@ def add_ratio(x):
     a, b = x.replace('*', ' ').split(' ')[:2]
     a, b = int(a), int(b)
     g = math.gcd(a, b)
-    return f'{a}×{b} <span style="color: grey;"> \U00002223 {a // g}:{b // g}</span>'
+    ratio_str = f"{a // g}:{b // g}"
+    
+    # Descriptive names for common aspect ratios
+    name_map = {
+        "1:2": "Tall Portrait / Full Body",
+        "9:16": "Phone Wallpaper / Story",
+        "13:19": "Standard Portrait",
+        "7:9": "Portrait",
+        "1:1": "Square / Profile Pic",
+        "9:7": "Landscape",
+        "19:13": "Standard Landscape",
+        "16:9": "Widescreen / Cinematic",
+        "2:1": "Panoramic Landscape",
+        "12:5": "Ultra-Widescreen",
+        "5:2": "Panoramic Cinema",
+        "26:9": "Extreme Widescreen",
+        "3:1": "Super Panoramic"
+    }
+    
+    desc = name_map.get(ratio_str, "")
+    if desc:
+        return f'{a}×{b}  |  {ratio_str} ({desc})'
+    else:
+        return f'{a}×{b}  |  {ratio_str}'
 
 
 default_aspect_ratio = add_ratio(default_aspect_ratio)
