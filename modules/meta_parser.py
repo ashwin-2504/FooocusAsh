@@ -69,6 +69,10 @@ def load_parameter_button_click(raw_metadata: dict | str, is_generating: bool, i
     for i in range(modules.config.default_max_lora_number):
         get_lora(f'lora_combined_{i + 1}', f'LoRA {i + 1}', loaded_parameter_dict, results, performance_filename)
 
+    nsfw_val = loaded_parameter_dict.get('default_black_out_nsfw', modules.config.default_black_out_nsfw)
+    results.append(gr.update(value=nsfw_val))
+    results.append(gr.update(value=nsfw_val, interactive=not nsfw_val))
+
     return results
 
 

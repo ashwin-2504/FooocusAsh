@@ -226,6 +226,11 @@ def compute_cfg(uncond, cond, cfg_scale, t):
 def patched_sampling_function(model, x, timestep, uncond, cond, cond_scale, model_options=None, seed=None):
     pid = os.getpid()
 
+    # Early CFG Termination (Skip negative prompt conditioning past 80% progress)
+    current_progress = patch_settings[pid].global_diffusion_progress
+    if current_progress > 0.8:
+        cond_scale = 1.0
+
     if math.isclose(cond_scale, 1.0) and not model_options.get("disable_cfg1_optimization", False):
         final_x0 = calc_cond_uncond_batch(model, cond, None, x, timestep, model_options)[0]
 

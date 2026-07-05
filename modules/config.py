@@ -752,6 +752,7 @@ possible_preset_keys = {
     "default_vae": "vae",
     # "default_inpaint_method": "inpaint_method", # disabled so inpaint mode doesn't refresh after every preset change
     "default_inpaint_engine_version": "inpaint_engine_version",
+    "default_black_out_nsfw": "default_black_out_nsfw",
 }
 
 REWRITE_PRESET = False
