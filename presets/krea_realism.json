@@ -50,7 +50,7 @@
     "embeddings_downloads": {},
     "lora_downloads": {
         "SDXL_FILM_PHOTOGRAPHY_STYLE_V1.safetensors": "https://huggingface.co/mashb1t/fav_models/resolve/main/fav/SDXL_FILM_PHOTOGRAPHY_STYLE_V1.safetensors",
-        "add_detail_xl.safetensors": "https://huggingface.co/LyliaEngine/add-detail-xl/resolve/main/add_detail_xl.safetensors",
+        "add_detail_xl.safetensors": "https://huggingface.co/LyliaEngine/add-detail-xl/resolve/main/add-detail-xl.safetensors",
         "sdxl_lowra.safetensors": "https://huggingface.co/JCTN/lora/resolve/main/lora/LowRA.safetensors"
     }
 }
