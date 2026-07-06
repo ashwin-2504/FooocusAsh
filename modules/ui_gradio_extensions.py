@@ -56,7 +56,3 @@ def css_html():
 def get_head_html():
     return javascript_html() + css_html()
 
-
-def reload_javascript():
-    # Deprecated in Gradio 5 as we pass head directly to gr.Blocks(head=...)
-    pass

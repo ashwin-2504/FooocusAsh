@@ -3,7 +3,6 @@ import torch
 import time
 import math
 import ldm_patched.modules.model_base
-import ldm_patched.ldm.modules.diffusionmodules.openaimodel
 import ldm_patched.modules.model_management
 import modules.anisotropic as anisotropic
 import ldm_patched.ldm.modules.attention
@@ -20,6 +19,8 @@ import ldm_patched.modules.args_parser
 import warnings
 import safetensors.torch
 import modules.constants as constants
+
+_pid = os.getpid()
 
 from ldm_patched.modules.samplers import calc_cond_uncond_batch
 from ldm_patched.k_diffusion.sampling import BatchedBrownianTree
@@ -210,7 +211,7 @@ class BrownianTreeNoiseSamplerPatched:
 
 
 def compute_cfg(uncond, cond, cfg_scale, t):
-    pid = os.getpid()
+    pid = _pid
     mimic_cfg = float(patch_settings[pid].adaptive_cfg)
     real_cfg = float(cfg_scale)
 
@@ -224,7 +225,7 @@ def compute_cfg(uncond, cond, cfg_scale, t):
 
 
 def patched_sampling_function(model, x, timestep, uncond, cond, cond_scale, model_options=None, seed=None):
-    pid = os.getpid()
+    pid = _pid
 
     # Early CFG Termination (Skip negative prompt conditioning past 80% progress)
     current_progress = patch_settings[pid].global_diffusion_progress
@@ -259,12 +260,7 @@ def patched_sampling_function(model, x, timestep, uncond, cond, cond_scale, mode
 
 
 def round_to_64(x):
-    h = float(x)
-    h = h / 64.0
-    h = round(h)
-    h = int(h)
-    h = h * 64
-    return h
+    return int(round(float(x) / 64.0)) * 64
 
 
 def sdxl_encode_adm_patched(self, **kwargs):
@@ -273,7 +269,7 @@ def sdxl_encode_adm_patched(self, **kwargs):
     height = kwargs.get("height", 1024)
     target_width = width
     target_height = height
-    pid = os.getpid()
+    pid = _pid
 
     if kwargs.get("prompt_type", "") == "negative":
         width = float(width) * patch_settings[pid].negative_adm_scale
@@ -334,7 +330,7 @@ def patched_KSamplerX0Inpaint_forward(self, x, sigma, uncond, cond, cond_scale, 
 
 def timed_adm(y, timesteps):
     if isinstance(y, torch.Tensor) and int(y.dim()) == 2 and int(y.shape[1]) == 5632:
-        y_mask = (timesteps > 999.0 * (1.0 - float(patch_settings[os.getpid()].adm_scaler_end))).to(y)[..., None]
+        y_mask = (timesteps > 999.0 * (1.0 - float(patch_settings[_pid].adm_scaler_end))).to(y)[..., None]
         y_with_adm = y[..., :2816].clone()
         y_without_adm = y[..., 2816:].clone()
         return y_with_adm * y_mask + y_without_adm * (1.0 - y_mask)
@@ -344,7 +340,7 @@ def timed_adm(y, timesteps):
 def patched_cldm_forward(self, x, hint, timesteps, context, y=None, **kwargs):
     t_emb = ldm_patched.ldm.modules.diffusionmodules.openaimodel.timestep_embedding(timesteps, self.model_channels, repeat_only=False).to(x.dtype)
     emb = self.time_embed(t_emb)
-    pid = os.getpid()
+    pid = _pid
 
     guided_hint = self.input_hint_block(hint, emb, context)
 
@@ -380,7 +376,7 @@ def patched_cldm_forward(self, x, hint, timesteps, context, y=None, **kwargs):
 
 def patched_unet_forward(self, x, timesteps=None, context=None, y=None, control=None, transformer_options={}, **kwargs):
     self.current_step = 1.0 - timesteps.to(x) / 999.0
-    patch_settings[os.getpid()].global_diffusion_progress = float(self.current_step.detach().cpu().numpy().tolist()[0])
+    patch_settings[_pid].global_diffusion_progress = self.current_step.item()
 
     y = timed_adm(y, timesteps)
 

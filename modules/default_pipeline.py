@@ -365,8 +365,8 @@ def process_diffusion(positive_cond, negative_cond, steps, switch, width, height
 
     minmax_sigmas = calculate_sigmas(sampler=sampler_name, scheduler=scheduler_name, model=final_unet.model, steps=steps, denoise=denoise)
     sigma_min, sigma_max = minmax_sigmas[minmax_sigmas > 0].min(), minmax_sigmas.max()
-    sigma_min = float(sigma_min.cpu().numpy())
-    sigma_max = float(sigma_max.cpu().numpy())
+    sigma_min = sigma_min.item()
+    sigma_max = sigma_max.item()
     print(f'[Sampler] sigma_min = {sigma_min}, sigma_max = {sigma_max}')
 
     modules.patch.BrownianTreeNoiseSamplerPatched.global_init(

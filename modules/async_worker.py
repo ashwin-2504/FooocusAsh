@@ -564,8 +564,8 @@ def worker():
                 inpaint_mask = np.pad(inpaint_mask, [[0, 0], [0, int(W * 0.3)]], mode='constant',
                                       constant_values=255)
 
-            inpaint_image = np.ascontiguousarray(inpaint_image.copy())
-            inpaint_mask = np.ascontiguousarray(inpaint_mask.copy())
+            inpaint_image = np.ascontiguousarray(inpaint_image)
+            inpaint_mask = np.ascontiguousarray(inpaint_mask)
             async_task.inpaint_strength = 1.0
             async_task.inpaint_respective_field = 1.0
         return inpaint_image, inpaint_mask
@@ -655,7 +655,7 @@ def worker():
         lora_filenames = modules.util.remove_performance_lora(modules.config.lora_filenames,
                                                               async_task.performance_selection)
         loras, prompt = parse_lora_references_from_prompt(prompt, async_task.loras,
-                                                          modules.config.default_max_lora_number,
+                                                          10,
                                                           lora_filenames=lora_filenames)
         loras += async_task.performance_loras
         pipeline.refresh_everything(refiner_model_name=async_task.refiner_model_name,

@@ -2,18 +2,8 @@
 
 import os
 import torch
-import ldm_patched.controlnet.cldm
-import ldm_patched.k_diffusion.sampling
-import ldm_patched.ldm.modules.attention
-import ldm_patched.ldm.modules.diffusionmodules.model
-import ldm_patched.ldm.modules.diffusionmodules.openaimodel
-import ldm_patched.ldm.modules.diffusionmodules.openaimodel
-import ldm_patched.modules.args_parser
-import ldm_patched.modules.model_base
 import ldm_patched.modules.model_management
 import ldm_patched.modules.model_patcher
-import ldm_patched.modules.samplers
-import ldm_patched.modules.sd
 import ldm_patched.modules.sd1_clip
 import ldm_patched.modules.clip_vision
 import ldm_patched.modules.ops as ops
@@ -96,7 +86,6 @@ def patched_SDClipModel__init__(self, max_length=77, freeze=True, layer="last", 
     self.special_tokens = special_tokens
     self.text_projection = torch.nn.Parameter(torch.eye(self.transformer.get_input_embeddings().weight.shape[1]))
     self.logit_scale = torch.nn.Parameter(torch.tensor(4.6055))
-    self.enable_attention_masks = False
 
     self.layer_norm_hidden_state = layer_norm_hidden_state
     if layer == "hidden":
@@ -113,14 +102,6 @@ def patched_SDClipModel_forward(self, tokens):
     tokens = torch.LongTensor(tokens).to(device)
 
     attention_mask = None
-    if self.enable_attention_masks:
-        attention_mask = torch.zeros_like(tokens)
-        max_token = self.transformer.get_input_embeddings().weight.shape[0] - 1
-        for x in range(attention_mask.shape[0]):
-            for y in range(attention_mask.shape[1]):
-                attention_mask[x, y] = 1
-                if tokens[x, y] == max_token:
-                    break
 
     outputs = self.transformer(input_ids=tokens, attention_mask=attention_mask,
                                output_hidden_states=self.layer == "hidden")

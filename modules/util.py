@@ -156,14 +156,6 @@ def remove_empty_str(items, default=None):
     return items
 
 
-def join_prompts(*args, **kwargs):
-    prompts = [str(x) for x in args if str(x) != ""]
-    if len(prompts) == 0:
-        return ""
-    if len(prompts) == 1:
-        return prompts[0]
-    return ', '.join(prompts)
-
 
 def generate_temp_filename(folder='./outputs/', extension='png'):
     current_time = datetime.datetime.now()

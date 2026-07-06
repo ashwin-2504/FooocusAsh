@@ -57,7 +57,6 @@ class StableDiffusionModel:
             self.lora_key_map_clip = model_lora_keys_clip(self.clip.cond_stage_model, self.lora_key_map_clip)
             self.lora_key_map_clip.update({x: x for x in self.clip.cond_stage_model.state_dict().keys()})
 
-    @torch.no_grad()
     @torch.inference_mode()
     def refresh_loras(self, loras):
         assert isinstance(loras, list)
@@ -122,26 +121,22 @@ class StableDiffusionModel:
                         print("CLIP LoRA key skipped: ", item)
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def apply_freeu(model, b1, b2, s1, s2):
     return opFreeU.patch(model=model, b1=b1, b2=b2, s1=s1, s2=s2)[0]
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def load_controlnet(ckpt_filename):
     return ldm_patched.modules.controlnet.load_controlnet(ckpt_filename)
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def apply_controlnet(positive, negative, control_net, image, strength, start_percent, end_percent):
     return opControlNetApplyAdvanced.apply_controlnet(positive=positive, negative=negative, control_net=control_net,
         image=image, strength=strength, start_percent=start_percent, end_percent=end_percent)
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def load_model(ckpt_filename, vae_filename=None):
     unet, clip, vae, vae_filename, clip_vision = load_checkpoint_guess_config(ckpt_filename, embedding_directory=path_embeddings,
@@ -149,13 +144,11 @@ def load_model(ckpt_filename, vae_filename=None):
     return StableDiffusionModel(unet=unet, clip=clip, vae=vae, clip_vision=clip_vision, filename=ckpt_filename, vae_filename=vae_filename)
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def generate_empty_latent(width=1024, height=1024, batch_size=1):
     return opEmptyLatentImage.generate(width=width, height=height, batch_size=batch_size)[0]
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def decode_vae(vae, latent_image, tiled=False):
     if tiled:
@@ -164,7 +157,6 @@ def decode_vae(vae, latent_image, tiled=False):
         return opVAEDecode.decode(samples=latent_image, vae=vae)[0]
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def encode_vae(vae, pixels, tiled=False):
     if tiled:
@@ -173,7 +165,6 @@ def encode_vae(vae, pixels, tiled=False):
         return opVAEEncode.encode(pixels=pixels, vae=vae)[0]
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def encode_vae_inpaint(vae, pixels, mask):
     assert mask.ndim == 3 and pixels.ndim == 4
@@ -219,7 +210,6 @@ class VAEApprox(torch.nn.Module):
 VAE_approx_models = {}
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def get_previewer(model):
     global VAE_approx_models
@@ -247,7 +237,6 @@ def get_previewer(model):
         VAE_approx_model.to(ldm_patched.modules.model_management.get_torch_device())
         VAE_approx_models[vae_approx_filename] = VAE_approx_model
 
-    @torch.no_grad()
     @torch.inference_mode()
     def preview_function(x0, step, total_steps):
         with torch.no_grad():
@@ -260,7 +249,6 @@ def get_previewer(model):
     return preview_function
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def ksampler(model, positive, negative, latent, seed=None, steps=30, cfg=7.0, sampler_name='dpmpp_2m_sde_gpu',
              scheduler='karras', denoise=1.0, disable_noise=False, start_step=None, last_step=None,
@@ -325,17 +313,12 @@ def ksampler(model, positive, negative, latent, seed=None, steps=30, cfg=7.0, sa
     return out
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def pytorch_to_numpy(x):
     return [np.clip(255. * y.cpu().numpy(), 0, 255).astype(np.uint8) for y in x]
 
 
-@torch.no_grad()
 @torch.inference_mode()
 def numpy_to_pytorch(x):
-    y = x.astype(np.float32) / 255.0
-    y = y[None]
-    y = np.ascontiguousarray(y.copy())
-    y = torch.from_numpy(y).float()
-    return y
+    y = np.ascontiguousarray(x.astype(np.float32) / 255.0)[None]
+    return torch.from_numpy(y)

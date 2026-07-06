@@ -56,11 +56,6 @@ def up255(x, t=0):
     return y
 
 
-def imsave(x, path):
-    x = Image.fromarray(x)
-    x.save(path)
-
-
 def regulate_abcd(x, a, b, c, d):
     H, W = x.shape[:2]
     if a < 0:

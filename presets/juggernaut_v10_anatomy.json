@@ -1,0 +1,58 @@
+{
+    "default_model": "Juggernaut-X-RunDiffusion-NSFW.safetensors",
+    "default_refiner": "None",
+    "default_refiner_switch": 0.5,
+    "default_loras": [
+        [
+            true,
+            "SkinRealism_SDXL.safetensors",
+            0.4
+        ],
+        [
+            true,
+            "detail_tweaker_xl.safetensors",
+            0.4
+        ],
+        [
+            true,
+            "NSFW_POV_All_In_One_SDXL.safetensors",
+            0.65
+        ],
+        [
+            false,
+            "Touch_of_Realism_SDXL_v2.safetensors",
+            0.35
+        ],
+        [
+            false,
+            "NSFW_Breaker_finenude.safetensors",
+            0.6
+        ]
+    ],
+    "default_cfg_scale": 4.0,
+    "default_sample_sharpness": 3.5,
+    "default_sampler": "dpmpp_2m_sde_gpu",
+    "default_scheduler": "karras",
+    "default_performance": "Speed",
+    "default_prompt": "",
+    "default_prompt_negative": "unrealistic, saturated, high contrast, big nose, painting, drawing, sketch, cartoon, anime, manga, render, CG, 3d, watermark, signature, label",
+    "default_styles": [
+        "Fooocus V2",
+        "Fooocus Photograph",
+        "Fooocus Negative"
+    ],
+    "default_aspect_ratio": "896*1152",
+    "default_overwrite_step": -1,
+    "default_black_out_nsfw": false,
+    "checkpoint_downloads": {
+        "Juggernaut-X-RunDiffusion-NSFW.safetensors": "https://huggingface.co/RunDiffusion/Juggernaut-X-v10/resolve/main/Juggernaut-X-RunDiffusion-NSFW.safetensors"
+    },
+    "embeddings_downloads": {},
+    "lora_downloads": {
+        "SkinRealism_SDXL.safetensors": "https://civitai.com/api/download/models/158652",
+        "detail_tweaker_xl.safetensors": "https://huggingface.co/rebelscum/lora/resolve/main/add_detail_xl.safetensors",
+        "Touch_of_Realism_SDXL_v2.safetensors": "https://huggingface.co/blackhvh/touchofrealism/resolve/main/Touch_of_Realism_SDXL_v2.safetensors",
+        "NSFW_POV_All_In_One_SDXL.safetensors": "https://civitai.com/api/download/models/162838",
+        "NSFW_Breaker_finenude.safetensors": "https://civitai.com/api/download/models/232431"
+    }
+}

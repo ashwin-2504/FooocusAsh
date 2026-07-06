@@ -7,7 +7,6 @@ import numpy as np
 
 import ldm_patched.ldm.modules.diffusionmodules.openaimodel
 import ldm_patched.modules.model_sampling
-import ldm_patched.modules.sd1_clip
 
 from ldm_patched.ldm.modules.diffusionmodules.util import make_beta_schedule
 

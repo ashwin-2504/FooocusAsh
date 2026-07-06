@@ -115,17 +115,6 @@ def _bilateral_blur(
     return out
 
 
-def bilateral_blur(
-    input: Tensor,
-    kernel_size: tuple[int, int] | int = (13, 13),
-    sigma_color: float | Tensor = 3.0,
-    sigma_space: tuple[float, float] | Tensor = 3.0,
-    border_type: str = 'reflect',
-    color_distance_type: str = 'l1',
-) -> Tensor:
-    return _bilateral_blur(input, None, kernel_size, sigma_color, sigma_space, border_type, color_distance_type)
-
-
 def adaptive_anisotropic_filter(x, g=None):
     if g is None:
         g = x
@@ -140,61 +129,3 @@ def adaptive_anisotropic_filter(x, g=None):
                         color_distance_type='l1')
     return y
 
-
-def joint_bilateral_blur(
-    input: Tensor,
-    guidance: Tensor,
-    kernel_size: tuple[int, int] | int,
-    sigma_color: float | Tensor,
-    sigma_space: tuple[float, float] | Tensor,
-    border_type: str = 'reflect',
-    color_distance_type: str = 'l1',
-) -> Tensor:
-    return _bilateral_blur(input, guidance, kernel_size, sigma_color, sigma_space, border_type, color_distance_type)
-
-
-class _BilateralBlur(torch.nn.Module):
-    def __init__(
-        self,
-        kernel_size: tuple[int, int] | int,
-        sigma_color: float | Tensor,
-        sigma_space: tuple[float, float] | Tensor,
-        border_type: str = 'reflect',
-        color_distance_type: str = "l1",
-    ) -> None:
-        super().__init__()
-        self.kernel_size = kernel_size
-        self.sigma_color = sigma_color
-        self.sigma_space = sigma_space
-        self.border_type = border_type
-        self.color_distance_type = color_distance_type
-
-    def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}"
-            f"(kernel_size={self.kernel_size}, "
-            f"sigma_color={self.sigma_color}, "
-            f"sigma_space={self.sigma_space}, "
-            f"border_type={self.border_type}, "
-            f"color_distance_type={self.color_distance_type})"
-        )
-
-
-class BilateralBlur(_BilateralBlur):
-    def forward(self, input: Tensor) -> Tensor:
-        return bilateral_blur(
-            input, self.kernel_size, self.sigma_color, self.sigma_space, self.border_type, self.color_distance_type
-        )
-
-
-class JointBilateralBlur(_BilateralBlur):
-    def forward(self, input: Tensor, guidance: Tensor) -> Tensor:
-        return joint_bilateral_blur(
-            input,
-            guidance,
-            self.kernel_size,
-            self.sigma_color,
-            self.sigma_space,
-            self.border_type,
-            self.color_distance_type,
-        )
