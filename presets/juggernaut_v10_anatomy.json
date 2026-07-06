@@ -50,7 +50,7 @@
     "embeddings_downloads": {},
     "lora_downloads": {
         "SkinRealism_SDXL.safetensors": "https://civitai.com/api/download/models/158652",
-        "detail_tweaker_xl.safetensors": "https://huggingface.co/rebelscum/lora/resolve/main/add_detail_xl.safetensors",
+        "detail_tweaker_xl.safetensors": "https://huggingface.co/LyliaEngine/add-detail-xl/resolve/main/add_detail_xl.safetensors",
         "Touch_of_Realism_SDXL_v2.safetensors": "https://huggingface.co/blackhvh/touchofrealism/resolve/main/Touch_of_Realism_SDXL_v2.safetensors",
         "NSFW_POV_All_In_One_SDXL.safetensors": "https://civitai.com/api/download/models/162838",
         "NSFW_Breaker_finenude.safetensors": "https://civitai.com/api/download/models/232431"
