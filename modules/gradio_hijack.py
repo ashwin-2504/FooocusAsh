@@ -12,14 +12,37 @@ import PIL.ImageOps
 import gradio.routes
 import importlib
 
-from gradio_client import utils as client_utils
-from gradio_client.documentation import document, set_documentation_group
-from gradio_client.serializing import ImgSerializable
+try:
+    from gradio_client import utils as client_utils
+except ImportError:
+    client_utils = None
+
+try:
+    from gradio_client.documentation import document, set_documentation_group
+except ImportError:
+    def document(*args, **kwargs):
+        def decorator(cls_or_func):
+            return cls_or_func
+        return decorator
+    def set_documentation_group(*args, **kwargs):
+        pass
+
+try:
+    from gradio_client.serializing import ImgSerializable
+except ImportError:
+    class ImgSerializable:
+        pass
+
+try:
+    from gradio.deprecation import warn_style_method_deprecation
+except ImportError:
+    def warn_style_method_deprecation(*args, **kwargs):
+        pass
+
 from PIL import Image as _Image  # using _ to minimize namespace pollution
 
 from gradio import processing_utils, utils, Error
 from gradio.components.base import IOComponent, _Keywords, Block
-from gradio.deprecation import warn_style_method_deprecation
 from gradio.events import (
     Changeable,
     Clearable,
