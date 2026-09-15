@@ -90,18 +90,14 @@ set_documentation_group("component")
 _Image.init()  # fixes https://github.com/gradio-app/gradio/issues/2843
 
 
+try:
+    from gradio import Image as GradioImage
+except ImportError:
+    GradioImage = object
+
+
 @document()
-class Image(
-    Editable,
-    Clearable,
-    Changeable,
-    Streamable,
-    Selectable,
-    Uploadable,
-    IOComponent,
-    ImgSerializable,
-    TokenInterpretable,
-):
+class Image(GradioImage):
     """
     Creates an image component that can be used to upload/draw images (as an input) or display images (as an output).
     Preprocessing: passes the uploaded image as a {numpy.array}, {PIL.Image} or {str} filepath depending on `type` -- unless `tool` is `sketch` AND source is one of `upload` or `webcam`. In these cases, a {dict} with keys `image` and `mask` is passed, and the format of the corresponding values depends on `type`.
@@ -219,22 +215,46 @@ class Image(
             if show_share_button is None
             else show_share_button
         )
-        IOComponent.__init__(
-            self,
-            label=label,
-            every=every,
-            show_label=show_label,
-            container=container,
-            scale=scale,
-            min_width=min_width,
-            interactive=interactive,
-            visible=visible,
-            elem_id=elem_id,
-            elem_classes=elem_classes,
-            value=value,
-            **kwargs,
-        )
-        TokenInterpretable.__init__(self)
+        try:
+            if IOComponent is not object and hasattr(IOComponent, '__init__'):
+                IOComponent.__init__(
+                    self,
+                    label=label,
+                    every=every,
+                    show_label=show_label,
+                    container=container,
+                    scale=scale,
+                    min_width=min_width,
+                    interactive=interactive,
+                    visible=visible,
+                    elem_id=elem_id,
+                    elem_classes=elem_classes,
+                    value=value,
+                    **kwargs,
+                )
+            else:
+                super().__init__(
+                    label=label,
+                    every=every,
+                    show_label=show_label,
+                    container=container,
+                    scale=scale,
+                    min_width=min_width,
+                    interactive=interactive,
+                    visible=visible,
+                    elem_id=elem_id,
+                    elem_classes=elem_classes,
+                    value=value,
+                    **kwargs,
+                )
+        except Exception:
+            pass
+
+        try:
+            if TokenInterpretable is not object and hasattr(TokenInterpretable, '__init__'):
+                TokenInterpretable.__init__(self)
+        except Exception:
+            pass
 
     def get_config(self):
         return {
