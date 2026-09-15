@@ -150,11 +150,7 @@ title = f'Fooocus {fooocus_version.version}'
 if isinstance(args_manager.args.preset, str):
     title += ' ' + args_manager.args.preset
 
-gradio_theme = getattr(gr.themes, 'Soft', lambda: None)() if hasattr(gr, 'themes') else None
-if gradio_theme is not None:
-    shared.gradio_root = gr.Blocks(title=title, theme=gradio_theme).queue()
-else:
-    shared.gradio_root = gr.Blocks(title=title).queue()
+shared.gradio_root = gr.Blocks(title=title).queue()
 
 with shared.gradio_root:
     currentTask = gr.State(worker.AsyncTask(args=[]))
@@ -181,11 +177,11 @@ with shared.gradio_root:
                         shared.gradio_root.load(lambda: default_prompt, outputs=prompt)
 
                 with gr.Column(scale=3, min_width=0):
-                    generate_button = gr.Button(label="Generate", value="Generate", elem_classes='type_row', elem_id='generate_button', visible=True)
-                    reset_button = gr.Button(label="Reconnect", value="Reconnect", elem_classes='type_row', elem_id='reset_button', visible=False)
-                    load_parameter_button = gr.Button(label="Load Parameters", value="Load Parameters", elem_classes='type_row', elem_id='load_parameter_button', visible=False)
-                    skip_button = gr.Button(label="Skip", value="Skip", elem_classes='type_row_half', elem_id='skip_button', visible=False)
-                    stop_button = gr.Button(label="Stop", value="Stop", elem_classes='type_row_half', elem_id='stop_button', visible=False)
+                    generate_button = gr.Button(value="Generate", elem_classes='type_row', elem_id='generate_button', visible=True)
+                    reset_button = gr.Button(value="Reconnect", elem_classes='type_row', elem_id='reset_button', visible=False)
+                    load_parameter_button = gr.Button(value="Load Parameters", elem_classes='type_row', elem_id='load_parameter_button', visible=False)
+                    skip_button = gr.Button(value="Skip", elem_classes='type_row_half', elem_id='skip_button', visible=False)
+                    stop_button = gr.Button(value="Stop", elem_classes='type_row_half', elem_id='stop_button', visible=False)
 
                     def stop_clicked(currentTask):
                         import ldm_patched.modules.model_management as model_management
