@@ -266,24 +266,33 @@ class Image(GradioImage):
             pass
 
     def get_config(self):
-        return {
+        # Use getattr for attributes that may differ across Gradio versions
+        # (e.g. 'selectable' was renamed to '_selectable' in Gradio 6.x)
+        config = {
             "image_mode": self.image_mode,
             "shape": self.shape,
             "height": self.height,
             "width": self.width,
-            "source": self.source,
-            "tool": self.tool,
+            "source": getattr(self, 'source', 'upload'),
+            "tool": getattr(self, 'tool', 'editor'),
             "value": self.value,
-            "streaming": self.streaming,
-            "mirror_webcam": self.mirror_webcam,
-            "brush_radius": self.brush_radius,
-            "brush_color": self.brush_color,
-            "mask_opacity": self.mask_opacity,
-            "selectable": self.selectable,
-            "show_share_button": self.show_share_button,
-            "show_download_button": self.show_download_button,
-            **IOComponent.get_config(self),
+            "streaming": getattr(self, 'streaming', False),
+            "mirror_webcam": getattr(self, 'mirror_webcam', True),
+            "brush_radius": getattr(self, 'brush_radius', None),
+            "brush_color": getattr(self, 'brush_color', '#000000'),
+            "mask_opacity": getattr(self, 'mask_opacity', 0.7),
+            "selectable": getattr(self, 'selectable', getattr(self, '_selectable', False)),
+            "show_share_button": getattr(self, 'show_share_button', False),
+            "show_download_button": getattr(self, 'show_download_button', True),
         }
+        try:
+            config.update(IOComponent.get_config(self))
+        except Exception:
+            try:
+                config.update(super().get_config())
+            except Exception:
+                pass
+        return config
 
     @staticmethod
     def update(
