@@ -50,15 +50,24 @@ except ImportError:
     Error = getattr(gr, 'Error', Exception)
 
 try:
-    from gradio.components.base import IOComponent, _Keywords, Block
+    from gradio import Block
 except ImportError:
     try:
-        from gradio.components import Component as IOComponent, Block
+        from gradio.components.base import Block
+    except ImportError:
+        class Block:
+            pass
+
+try:
+    from gradio.components.base import IOComponent, _Keywords
+except ImportError:
+    try:
+        from gradio.components import Component as IOComponent
         class _Keywords:
             NO_VALUE = "NO_VALUE"
     except ImportError:
-        IOComponent = object
-        Block = object
+        class IOComponent:
+            pass
         class _Keywords:
             NO_VALUE = "NO_VALUE"
 
@@ -537,16 +546,18 @@ class Image(GradioImage):
 
 all_components = []
 
-if not hasattr(Block, 'original__init__'):
-    Block.original_init = Block.__init__
+try:
+    if hasattr(Block, '__init__') and Block is not object:
+        if not hasattr(Block, 'original_init'):
+            Block.original_init = Block.__init__
 
+        def blk_ini(self, *args, **kwargs):
+            all_components.append(self)
+            return Block.original_init(self, *args, **kwargs)
 
-def blk_ini(self, *args, **kwargs):
-    all_components.append(self)
-    return Block.original_init(self, *args, **kwargs)
-
-
-Block.__init__ = blk_ini
+        Block.__init__ = blk_ini
+except Exception:
+    pass
 
 
 try:
