@@ -99,7 +99,9 @@ def patched_SDClipModel__init__(self, max_length=77, freeze=True, layer="last", 
     if dtype is not None:
         self.transformer.to(dtype)
 
-    self.transformer.text_model.embeddings.to(torch.float32)
+    # transformers 5.x flattened CLIPTextModel: text_model removed, embeddings is direct
+    text_model = getattr(self.transformer, 'text_model', self.transformer)
+    text_model.embeddings.to(torch.float32)
 
     if freeze:
         self.freeze()
@@ -147,7 +149,8 @@ def patched_SDClipModel_forward(self, tokens):
     else:
         z = outputs.hidden_states[self.layer_idx]
         if self.layer_norm_hidden_state:
-            z = self.transformer.text_model.final_layer_norm(z)
+            text_model = getattr(self.transformer, 'text_model', self.transformer)
+            z = text_model.final_layer_norm(z)
 
     if hasattr(outputs, "pooler_output"):
         pooled_output = outputs.pooler_output.float()
