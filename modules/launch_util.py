@@ -16,7 +16,7 @@ logging.getLogger("xformers").addFilter(lambda record: 'A matching Triton is not
 re_requirement = re.compile(r"\s*([-\w]+)\s*(?:==\s*([-+.\w]+))?\s*")
 
 python = sys.executable
-default_command_live = (os.environ.get('LAUNCH_LIVE_OUTPUT') == "1")
+default_command_live = (os.environ.get('LAUNCH_LIVE_OUTPUT', "1") == "1")
 index_url = os.environ.get('INDEX_URL', "")
 
 modules_path = os.path.dirname(os.path.realpath(__file__))
