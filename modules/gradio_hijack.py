@@ -531,7 +531,7 @@ class Image(GradioImage):
         return self
 
     def check_streamable(self):
-        if self.source != "webcam":
+        if getattr(self, 'streaming', False) and getattr(self, 'source', None) != "webcam":
             raise ValueError("Image streaming only available if source is 'webcam'.")
 
     def as_example(self, input_data: str | None) -> str:
