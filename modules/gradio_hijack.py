@@ -132,6 +132,12 @@ class Image(
         self.height = height
         self.width = width
         self.image_mode = image_mode
+
+        # Support both modern 'sources' list and legacy 'source' string
+        sources_arg = kwargs.pop('sources', None)
+        if sources_arg is not None:
+            source = sources_arg[0] if isinstance(sources_arg, list) and len(sources_arg) > 0 else sources_arg
+
         valid_sources = ["upload", "webcam", "canvas"]
         if source not in valid_sources:
             raise ValueError(
@@ -468,16 +474,18 @@ def blk_ini(self, *args, **kwargs):
 Block.__init__ = blk_ini
 
 
-gradio.routes.asyncio = importlib.reload(gradio.routes.asyncio)
+try:
+    if hasattr(gradio, 'routes') and hasattr(gradio.routes, 'asyncio'):
+        gradio.routes.asyncio = importlib.reload(gradio.routes.asyncio)
+        if not hasattr(gradio.routes.asyncio, 'original_wait_for'):
+            gradio.routes.asyncio.original_wait_for = gradio.routes.asyncio.wait_for
 
-if not hasattr(gradio.routes.asyncio, 'original_wait_for'):
-    gradio.routes.asyncio.original_wait_for = gradio.routes.asyncio.wait_for
+        def patched_wait_for(fut, timeout):
+            del timeout
+            return gradio.routes.asyncio.original_wait_for(fut, timeout=65535)
 
+        gradio.routes.asyncio.wait_for = patched_wait_for
+except Exception as hijack_err:
+    pass
 
-def patched_wait_for(fut, timeout):
-    del timeout
-    return gradio.routes.asyncio.original_wait_for(fut, timeout=65535)
-
-
-gradio.routes.asyncio.wait_for = patched_wait_for
 

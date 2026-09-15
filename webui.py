@@ -150,7 +150,11 @@ title = f'Fooocus {fooocus_version.version}'
 if isinstance(args_manager.args.preset, str):
     title += ' ' + args_manager.args.preset
 
-shared.gradio_root = gr.Blocks(title=title).queue()
+gradio_theme = getattr(gr.themes, 'Soft', lambda: None)() if hasattr(gr, 'themes') else None
+if gradio_theme is not None:
+    shared.gradio_root = gr.Blocks(title=title, theme=gradio_theme).queue()
+else:
+    shared.gradio_root = gr.Blocks(title=title).queue()
 
 with shared.gradio_root:
     currentTask = gr.State(worker.AsyncTask(args=[]))
@@ -160,11 +164,11 @@ with shared.gradio_root:
             with gr.Row():
                 progress_window = grh.Image(label='Preview', show_label=True, visible=False, height=768,
                                             elem_classes=['main_view'])
-                progress_gallery = gr.Gallery(label='Finished Images', show_label=True, object_fit='contain',
+                progress_gallery = gr.Gallery(label='Finished Images', show_label=True,
                                               height=768, visible=False, elem_classes=['main_view', 'image_gallery'])
             progress_html = gr.HTML(value=modules.html.make_progress_html(32, 'Progress 32%'), visible=False,
                                     elem_id='progress-bar', elem_classes='progress-bar')
-            gallery = gr.Gallery(label='Gallery', show_label=False, object_fit='contain', visible=True, height=768,
+            gallery = gr.Gallery(label='Gallery', show_label=False, visible=True, height=768,
                                  elem_classes=['resizable_area', 'main_view', 'final_gallery', 'image_gallery'],
                                  elem_id='final_gallery')
             with gr.Row():
