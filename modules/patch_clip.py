@@ -79,7 +79,21 @@ def patched_SDClipModel__init__(self, max_length=77, freeze=True, layer="last", 
     self.num_layers = config.num_hidden_layers
 
     with use_patched_ops(ops.manual_cast):
-        with modeling_utils.no_init_weights():
+        # no_init_weights() was removed in transformers 5.x
+        try:
+            ctx = modeling_utils.no_init_weights()
+        except AttributeError:
+            import contextlib
+            @contextlib.contextmanager
+            def _no_init():
+                old_val = getattr(modeling_utils, '_no_init_weights', False)
+                modeling_utils._no_init_weights = True
+                try:
+                    yield
+                finally:
+                    modeling_utils._no_init_weights = old_val
+            ctx = _no_init()
+        with ctx:
             self.transformer = CLIPTextModel(config)
 
     if dtype is not None:
@@ -158,7 +172,21 @@ def patched_ClipVisionModel__init__(self, json_config):
         self.dtype = torch.float32
 
     with use_patched_ops(ops.manual_cast):
-        with modeling_utils.no_init_weights():
+        # no_init_weights() was removed in transformers 5.x
+        try:
+            ctx = modeling_utils.no_init_weights()
+        except AttributeError:
+            import contextlib
+            @contextlib.contextmanager
+            def _no_init():
+                old_val = getattr(modeling_utils, '_no_init_weights', False)
+                modeling_utils._no_init_weights = True
+                try:
+                    yield
+                finally:
+                    modeling_utils._no_init_weights = old_val
+            ctx = _no_init()
+        with ctx:
             self.model = CLIPVisionModelWithProjection(config)
 
     self.model.to(self.dtype)
