@@ -41,18 +41,50 @@ except ImportError:
 
 from PIL import Image as _Image  # using _ to minimize namespace pollution
 
-from gradio import processing_utils, utils, Error
-from gradio.components.base import IOComponent, _Keywords, Block
-from gradio.events import (
-    Changeable,
-    Clearable,
-    Editable,
-    EventListenerMethod,
-    Selectable,
-    Streamable,
-    Uploadable,
-)
-from gradio.interpretation import TokenInterpretable
+try:
+    from gradio import processing_utils, utils, Error
+except ImportError:
+    import gradio as gr
+    processing_utils = getattr(gr, 'processing_utils', None)
+    utils = getattr(gr, 'utils', None)
+    Error = getattr(gr, 'Error', Exception)
+
+try:
+    from gradio.components.base import IOComponent, _Keywords, Block
+except ImportError:
+    try:
+        from gradio.components import Component as IOComponent, Block
+        class _Keywords:
+            NO_VALUE = "NO_VALUE"
+    except ImportError:
+        IOComponent = object
+        Block = object
+        class _Keywords:
+            NO_VALUE = "NO_VALUE"
+
+try:
+    from gradio.events import (
+        Changeable,
+        Clearable,
+        Editable,
+        EventListenerMethod,
+        Selectable,
+        Streamable,
+        Uploadable,
+    )
+except ImportError:
+    class Changeable: pass
+    class Clearable: pass
+    class Editable: pass
+    class EventListenerMethod: pass
+    class Selectable: pass
+    class Streamable: pass
+    class Uploadable: pass
+
+try:
+    from gradio.interpretation import TokenInterpretable
+except ImportError:
+    class TokenInterpretable: pass
 
 set_documentation_group("component")
 _Image.init()  # fixes https://github.com/gradio-app/gradio/issues/2843
